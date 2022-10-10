@@ -1,0 +1,97 @@
+" Some regular stuff
+colorscheme desert
+syntax on                   " Syntax highlighting
+set autoindent              " Indent newlines automatically
+set cindent                 " Indent c-style syntax automatically
+set expandtab               " Indent tabs as spaces
+set tabstop=2               " Indent with 2 spaces
+set softtabstop=-1          " Indent is removed with same amount of characters as tabstop
+set shiftwidth=0            " Indent with cindent the same amount of characters as tabstop
+set ignorecase              " Search is not case-sensitive
+set smartcase               " Search is case sensitive when searching for words with capital letters
+set incsearch               " Search while typing
+set hlsearch                " Search results are highlighted
+set hidden                  " Keep unsaved data and undo information when switching buffers
+set backupcopy=yes          " Do not write new inode when saving file
+set showcmd                 " Show count of marked lines in bottom right
+set cursorline              " Highlight the line the Cursor is on
+set number                  " Line numbers
+set signcolumn=number       " Add signs on top of number column
+set linebreak               " Break long lines by word-boundaries instead of in the middle of word
+set scrolloff=10            " Cursor centered-ish
+set wildmenu                " Better completion mode
+set wildmode=full           " Complete to first word
+set shortmess-=S            " Display search hit count
+
+" Use space as <leader> key
+let mapleader=" "
+
+" Make netrw default to tree view
+let g:netrw_liststyle=3
+
+" Check if working file is updated when entering that buffer
+autocmd FocusGained,BufEnter * :silent! checktime
+
+" Clear the jumplist once vim starts
+autocmd VimEnter * clearjumps
+
+" collect swapfiles in one directory
+silent !mkdir -p ~/.vim/swapfiles
+set directory=$HOME/.vim/swapfiles
+
+" Set filetype for included ssh configs
+autocmd BufNewFile,BufRead ~/.ssh/config.d/* setfiletype sshconfig
+
+" Filetype specific indentation
+autocmd FileType rust setlocal tabstop=4
+autocmd FileType javascript setlocal tabstop=2
+autocmd FileType python setlocal tabstop=4 noexpandtab
+autocmd FileType yaml setlocal tabstop=2
+autocmd FileType html setlocal tabstop=2
+
+" Do not highlight errors in markdown docs
+autocmd FileType markdown highlight link markdownError Normal
+
+
+""" Key mappings
+
+" Remap s key as a delete without writing to cut register
+noremap s "_d
+noremap ss "_dd
+noremap S "_D
+
+" Remap x key so that it does not write to cut register
+noremap x "_x
+noremap X "_X
+
+" Remap Y key to act as all the other capital letters
+" Seriously, why is Y = yy when D = d$ and C = c$ ?!
+noremap Y y$
+
+" Use F12 to switch buffers
+nnoremap <silent> <F12> :bn<CR>
+nnoremap <silent> <S-F12> :bp<CR>
+
+" Move vertically by visual line
+nnoremap j gj
+nnoremap k gk
+
+" Use ctrl-k/ctrl-j as up/down
+map <c-k> <c-p>
+map <c-j> <c-n>
+map! <c-k> <c-p>
+map! <c-j> <c-n>
+
+" Disable arrow-keys, use hjkl instead
+noremap <Up> <NOP>
+noremap <Down> <NOP>
+noremap <Left> <NOP>
+noremap <Right> <NOP>
+inoremap <Up> <NOP>
+inoremap <Down> <NOP>
+inoremap <Left> <NOP>
+inoremap <Right> <NOP>
+
+" Disable PageUp/PageDown use ctrl-u/ctrl-d instead
+noremap <PageUp> <NOP>
+noremap <PageDown> <NOP>
