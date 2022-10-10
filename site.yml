@@ -1,0 +1,7 @@
+---
+- name: "Role: common"
+  hosts: all
+  roles:
+    - common
+  tags:
+    - common

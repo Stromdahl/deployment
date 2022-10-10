@@ -1,0 +1,92 @@
+---
+- name: Install necessary packages
+  become: yes
+  apt:
+    update_cache: yes
+    state: present
+    name:
+      - apt-transport-https
+      - ca-certificates
+      - curl
+      - gnupg-agent
+      - software-properties-common
+      - libffi-dev
+      -  python3-pip
+
+- name: Add docker apt repository
+  when: override_distribution_release is not defined
+  become: yes
+  copy:
+    backup: yes
+    content: "deb [arch=amd64] https://download.docker.com/linux/{{ansible_distribution|lower}} {{ansible_distribution_release}} stable\n"
+    dest: /etc/apt/sources.list.d/docker.list
+
+- name: Add docker apt repository with overridden distribution
+  when: override_distribution_release is defined
+  become: yes
+  copy:
+    backup: yes
+    content: "deb [arch=amd64] https://download.docker.com/linux/{{ansible_distribution|lower}} {{override_distribution_release}} stable\n"
+    dest: /etc/apt/sources.list.d/docker.list
+
+- name: Add docker apt key
+  become: yes
+  apt_key:
+    url: "https://download.docker.com/linux/{{ansible_distribution|lower}}/gpg"
+    state: present
+
+- name: Check for special docker daemon config file
+  local_action:
+    module: stat
+    path: "{{role_path}}/files/{{inventory_hostname}}/daemon.json"
+  register: stat_special_daemon_config
+
+- name: Add docker daemon config file
+  when: not stat_special_daemon_config.stat.exists
+  become: yes
+  copy:
+    backup: yes
+    src: "daemon.json"
+    dest: "/etc/docker/"
+
+- name: Add special docker daemon config file
+  when: stat_special_daemon_config.stat.exists
+  become: yes
+  copy:
+    backup: yes
+    src: "{{inventory_hostname}}/daemon.json"
+    dest: "/etc/docker/"
+
+- name: Pin specific docker version
+  become: yes
+  copy:
+    backup: no
+    content: "Package: docker-ce\nPin: version {{docker_version | default(\"18.03.*\")}}\nPin-Priority: 600\n"
+    dest: /etc/apt/preferences.d/90docker-version-pin
+
+- name: Install docker
+  become: yes
+  apt:
+    update_cache: yes
+    name: docker-ce
+    state: present
+
+- name: "Add user to docker group"
+  become: yes
+  user:
+    name: "{{ansible_user_id}}"
+    append: yes
+    groups: docker
+
+# Install docker-compose python library, so that ansible can run docker and docker-compose things
+# The ansible pip module uses the correct pip version depending on which
+# python version is being used, there is no need to specify executable: pip3
+- name: pip install docker-compose
+  become: yes
+  ignore_errors: yes
+  register: pip_install
+  pip:
+    name: docker-compose
+    version: ">=1.7.0,<1.26"
+    state: present
+

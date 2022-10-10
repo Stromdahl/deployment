@@ -1,0 +1,36 @@
+---
+- name: Install useful tools
+  become: yes
+  apt:
+    update_cache: yes
+    cache_valid_time: 3600
+    state: present
+    name:
+      - bc
+      - gpg
+      - htop
+      - jq
+      - man-db
+      - molly-guard
+      - mosquitto-clients
+      - ncdu
+      - ntp
+      - pv
+      - unattended-upgrades
+      - vim
+
+- name: Upgrades
+  become: yes
+  apt:
+    update_cache: yes
+    upgrade: 'yes'
+
+- name: Add user to adm group
+  become: yes
+  user:
+    name: "{{ansible_user_id}}"
+    append: yes
+    groups: adm
+
+- name: Install docker
+  include: docker.yml
