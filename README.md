@@ -1,2 +1,2 @@
 # deployment
-A repository for handling my servers and workstations
+A repository for handling my server and workstation deployments
