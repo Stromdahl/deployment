@@ -1,7 +1,14 @@
 homer
+bender
 
 [server]
 homer
 
 [homecontrol]
 homer
+
+[workstation]
+bender
+
+[laptop]
+bender
