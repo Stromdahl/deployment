@@ -8,6 +8,13 @@ then
   exit 1
 fi
 
+echo ==================================
+echo Update and Upgrade
+echo ==================================
+apt update
+apt upgrade
+
+
 NAME='ms'
 echo ==================================
 echo "Add user $NAME"
