@@ -13,6 +13,7 @@ echo ==================================
 echo "Add user $NAME"
 useradd $NAME || echo "User '$NAME' exists"
 echo ==================================
+mkdir -p /home/$NAME
 
 echo ==================================
 echo Installing sudo and adding user
