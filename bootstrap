@@ -12,7 +12,7 @@ echo ==================================
 echo Update and Upgrade
 echo ==================================
 apt update
-apt upgrade
+apt upgrade -y
 
 
 NAME='ms'
