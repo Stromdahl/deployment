@@ -1,5 +1,7 @@
 #! /usr/bin/env bash
 
+NAME='ms'
+
 if [ "$EUID" -ne 0 ]
 then
   echo ==================================
@@ -15,12 +17,15 @@ apt update
 apt upgrade -y
 
 
-NAME='ms'
 echo ==================================
 echo "Add user $NAME"
-useradd $NAME || echo "User '$NAME' exists"
 echo ==================================
-mkdir -p /home/$NAME
+read -s -p "Enter password : " password
+pass=$(perl -e 'print crypt($ARGV[0], "4vLP%xYGrV!M5z")' $password)
+echo "$pass"
+
+useradd -m -p $pass $NAME username || echo "User '$NAME' exists"
+
 
 echo ==================================
 echo Installing sudo and adding user
@@ -39,6 +44,7 @@ sudo -i -u $NAME bash << EOF
 echo ==================================
 echo Installing ansible as user \'$NAME\'
 echo ==================================
+mkdir -p /home/$NAME
 python3 -m pip install --user ansible
 ansible --version
 EOF
