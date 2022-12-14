@@ -24,7 +24,7 @@ read -s -p "Enter password : " password
 pass=$(perl -e 'print crypt($ARGV[0], "4vLP%xYGrV!M5z")' $password)
 echo "$pass"
 
-useradd -m -p $pass $NAME username || echo "User '$NAME' exists"
+useradd -m -p $pass $NAME|| echo "User '$NAME' exists"
 
 
 echo ==================================
