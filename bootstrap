@@ -39,7 +39,6 @@ echo ==================================
 apt install python3 -y
 apt install python3-pip -y
 
-NAME=$(id -nu 1000)
 sudo -i -u $NAME bash << EOF
 echo ==================================
 echo Installing ansible as user \'$NAME\'
