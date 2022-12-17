@@ -13,8 +13,10 @@ fi
 echo ==================================
 echo Update and Upgrade
 echo ==================================
+{
 apt update
 apt upgrade -y
+} &> /dev/null
 
 echo ==================================
 echo "Add user $username"
@@ -27,7 +29,9 @@ if [ $? -eq 0 ]; then
 	echo "$username exists!"
 else
 	pass=$(perl -e 'print crypt($ARGV[0], "password")' $password)
+  {
 	useradd -m -p "$pass" "$username"
+  } &> /dev/null
 	[ $? -eq 0 ] && echo "User has been added to system!" || echo "Failed to add a user!"
 fi
 
