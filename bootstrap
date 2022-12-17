@@ -43,19 +43,20 @@ apt install sudo
 adduser $username sudo
 
 echo ==================================
-echo Installing python3 and pip
+echo Installing python3 pip and ansible
 echo ==================================
 apt install python3 -y
 apt install python3-pip -y
+apt install ansible -y
 
-sudo -i -u $username bash << EOF
-echo ==================================
-echo Installing ansible as user \'$username\'
-echo ==================================
-mkdir -p /home/$username
-python3 -m pip install --user ansible
-ansible --version
-EOF
+# sudo -i -u $username bash << EOF
+# echo ==================================
+# echo Installing ansible as user \'$username\'
+# echo ==================================
+# mkdir -p /home/$username
+# python3 -m pip install --user ansible
+# ansible --version
+# EOF
 
 echo ==================================
 echo All done, have fun!
