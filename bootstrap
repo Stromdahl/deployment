@@ -1,0 +1,58 @@
+#! /usr/bin/env bash
+
+username='ms'
+
+if [ "$EUID" -ne 0 ]
+then
+  echo ==================================
+  echo Please be root
+  echo ==================================
+  exit 2
+fi
+
+echo ==================================
+echo Update and Upgrade
+echo ==================================
+apt update
+apt upgrade -y
+
+echo ==================================
+echo "Add user $username"
+echo ==================================
+
+# read -p "Enter username : " username
+read -s -p "Enter password : " password
+egrep "^$username" /etc/passwd >/dev/null
+if [ $? -eq 0 ]; then
+	echo "$username exists!"
+else
+	pass=$(perl -e 'print crypt($ARGV[0], "password")' $password)
+	useradd -m -p "$pass" "$username"
+	[ $? -eq 0 ] && echo "User has been added to system!" || echo "Failed to add a user!"
+fi
+
+
+echo ==================================
+echo Installing sudo and adding user
+echo ==================================
+apt install sudo
+adduser $username sudo
+
+echo ==================================
+echo Installing python3 and pip
+echo ==================================
+apt install python3 -y
+apt install python3-pip -y
+
+sudo -i -u $username bash << EOF
+echo ==================================
+echo Installing ansible as user \'$username\'
+echo ==================================
+mkdir -p /home/$username
+python3 -m pip install --user ansible
+ansible --version
+EOF
+
+echo ==================================
+echo All done, have fun!
+echo ==================================

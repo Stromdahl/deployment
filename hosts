@@ -1,4 +1,5 @@
 homer
+bender
 
 [server]
 homer
@@ -8,3 +9,9 @@ homer
 
 [wireguard]
 homer
+
+[workstation]
+bender
+
+[laptop]
+bender
