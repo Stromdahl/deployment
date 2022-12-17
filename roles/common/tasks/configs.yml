@@ -1,0 +1,22 @@
+---
+- name: clone configs repo
+  git:
+    accept_hostkey: yes
+    repo: git@github.com:Stromdahl/configs.git
+    dest: "{{ configs_dir }}"
+    version: restructure
+- name: create directories
+  file:
+    path: "{{ item }}"
+    state: directory
+  loop:
+    - "{{ansible_user_dir}}/.config/nvim"
+    - "{{ansible_user_dir}}/.config/xfce4/terminal"
+
+- include_tasks: install_configs.yml
+  loop:
+    - repo_path: bash/bashrc
+      install_path: .bashrc
+
+  loop_control:
+    loop_var: dotfileInfo

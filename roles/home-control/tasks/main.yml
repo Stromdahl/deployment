@@ -1,0 +1,29 @@
+---
+- name: Ensure directories exists
+  file:
+    path: "{{ item }}"
+    state: directory
+  loop:
+    - home-assistant
+    - node-red
+    - zigbee2mqtt
+    - mosquitto/config
+    - mosquitto/log
+    - mosquitto/data
+
+- name: Ensure mosquitto config exists
+  copy:
+    src: mosquitto.conf
+    dest: ~/mosquitto/config/mosquitto.conf
+
+- name: Ensure zigbee2mqtt config exists
+  copy:
+    src: zigbee2mqtt-config.yml
+    dest: ~/zigbee2mqtt/configuration.yaml
+    force: no
+
+- name: Ensure docker-compose exists
+  copy:
+    src: docker-compose.yml
+    dest: ~/docker-compose.yml
+

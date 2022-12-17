@@ -1,0 +1,47 @@
+---
+- name: Install Wireguard
+  become: yes
+  apt:
+    state: present
+    name: 
+      - wireguard
+      - resolvconf
+      - nftables
+
+- name: Deploy wg0.conf
+  register: wg0conf
+  become: yes
+  template:
+    mode: 0600
+    src: wg0.conf.j2
+    dest: /etc/wireguard/wg0.conf
+
+- name: Ensure nftablesd uses include
+  when: wireguard == "server"
+  become: yes
+  lineinfiles:
+    path: /etc/nftables.conf
+    line: "include \"/etc/nftables/*.nft\""
+
+- name: Add wireguard nftables
+  when: wireguard == "server"
+  become: yes
+  copy:
+    src: wireguard.nft
+    dest: /etc/nftables/wireguard.nft
+
+- name: Add enable ip forwarding
+  when: wireguard == "server"
+  become: yes
+  copy:
+    content: "# Enable ip forwarding, used by wireguard\nnet.ipv4.ip_forward=1"
+    dest: /etc/sysctl.d/99-ipforward.conf
+
+- name: Restart Wireguard on wg0
+  when: wg0conf.changed
+  become: yes
+  systemd:
+    name: wg-quick@wg0
+    state: restarted
+    enabled: yes
+

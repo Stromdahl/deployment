@@ -5,3 +5,17 @@
     - common
   tags:
     - common
+
+- name: "Role: home-control"
+  hosts: homecontrol
+  roles:
+    - home-control
+  tags:
+    - home-control
+
+- name: "Role: wireguard"
+  hosts: wireguard
+  roles:
+    - wireguard
+  tags:
+    - wireguard

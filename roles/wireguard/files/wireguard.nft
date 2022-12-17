@@ -1,0 +1,11 @@
+add table wireguard-nat
+
+table ip wireguard-nat {
+        chain prerouting {
+                type nat hook prerouting priority -100; policy accept;
+        }
+
+        chain postrouting {
+                type nat hook postrouting priority 100; policy accept;
+        }
+}

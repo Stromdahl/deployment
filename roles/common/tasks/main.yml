@@ -7,6 +7,7 @@
     state: present
     name:
       - bc
+      - fzf
       - gpg
       - htop
       - jq
@@ -16,6 +17,7 @@
       - ncdu
       - ntp
       - pv
+      - ripgrep
       - unattended-upgrades
       - vim
 
@@ -32,5 +34,10 @@
     append: yes
     groups: adm
 
+- name: Install configs
+  include: configs.yml
+
 - name: Install docker
   include: docker.yml
+
+
