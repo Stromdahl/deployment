@@ -1,6 +1,9 @@
 #! /usr/bin/env bash
 
+# TODO: make username and password optional flags
 username='ms'
+# read -p "Enter username : " username
+# read -s -p "Enter password : " password
 
 if [ "$EUID" -ne 0 ]
 then
@@ -11,17 +14,9 @@ then
 fi
 
 echo ==================================
-echo Update and Upgrade
-echo ==================================
-apt update
-apt upgrade -y
-
-echo ==================================
 echo "Add user $username"
 echo ==================================
 
-# read -p "Enter username : " username
-read -s -p "Enter password : " password
 egrep "^$username" /etc/passwd >/dev/null
 if [ $? -eq 0 ]; then
 	echo "$username exists!"
@@ -40,20 +35,14 @@ apt install sudo
 adduser $username sudo
 
 echo ==================================
-echo Installing python3 pip and ansible
+echo Installing packages
 echo ==================================
+apt update
+apt upgrade -y
+
 apt install python3 -y
 apt install python3-pip -y
 apt install ansible -y
-
-# sudo -i -u $username bash << EOF
-# echo ==================================
-# echo Installing ansible as user \'$username\'
-# echo ==================================
-# mkdir -p /home/$username
-# python3 -m pip install --user ansible
-# ansible --version
-# EOF
 
 echo ==================================
 echo All done, have fun!
