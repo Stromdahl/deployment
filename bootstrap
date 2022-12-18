@@ -13,6 +13,7 @@ then
   exit 2
 fi
 
+# TODO: move user spesifics to ansible
 echo ==================================
 echo "Add user $username"
 echo ==================================
@@ -26,7 +27,6 @@ else
 	useradd -m -p "$pass" "$username"
 	[ $? -eq 0 ] && echo "User has been added to system!" || echo "Failed to add a user!"
 fi
-
 
 echo ==================================
 echo Installing sudo and adding user
@@ -43,6 +43,11 @@ apt upgrade -y
 apt install python3 -y
 apt install python3-pip -y
 apt install ansible -y
+
+echo ==================================
+echo Adding ssh keys
+echo ==================================
+wget -qO /home/$username/.ssh/authorized_keys https://github.com/stromdahl.keys
 
 echo ==================================
 echo All done, have fun!
